@@ -20,23 +20,19 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir('tERRAFORM') {
-                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'terraform-dev-tfvars')])
-                    sh 'terraform plan'
+                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'TFVARS_FILE')]) {
+                        sh 'terraform plan -var-file=$TFVARS_FILE'
+                    }
                 }
             }
         }
 
-       /* stage('Approval') {
-            steps {
-                input message: 'Do you want to apply Terraform changes?'
-            }
-        }
-*/
         stage('Terraform Apply') {
             steps {
                 dir('tERRAFORM') {
-                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'terraform-dev-tfvars')])
-                    sh 'terraform apply -auto-approve'
+                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'TFVARS_FILE')]) {
+                        sh 'terraform apply -auto-approve -var-file=$TFVARS_FILE'
+                    }
                 }
             }
         }
