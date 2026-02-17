@@ -5,30 +5,35 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                 dir('tERRAFORM') 
                 checkout scm
             }
         }
 
         stage('Terraform Init') {
             steps {
+                dir('tERRAFORM') 
                 sh 'terraform init'
             }
         }
 
         stage('Terraform Plan') {
             steps {
+                dir('tERRAFORM') 
                 sh 'terraform plan'
             }
         }
 
         stage('Approval') {
             steps {
+                dir('tERRAFORM') 
                 input message: 'Approve Terraform Apply?'
             }
         }
 
         stage('Terraform Apply') {
             steps {
+                dir('tERRAFORM') 
                 sh 'terraform apply -auto-approve'
             }
         }
