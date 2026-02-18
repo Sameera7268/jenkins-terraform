@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                dir('eks-terraform') {
+                    sh 'terraform init'
+                }
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('eks-terraform') {
+                   
+                        sh 'terraform plan
+                   
+                }
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                dir('eks-terraform') {
+                    
+                        sh 'terraform apply -auto-approve
+                    
+                }
+            }
+        }
+    }
+}
