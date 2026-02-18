@@ -1,40 +1,58 @@
 pipeline {
     agent any
 
+    environment {
+        AWS_DEFAULT_REGION = "ap-south-1"
+    }
+
     stages {
 
-        stage('Checkout') {
+        stage('Clean Workspace') {
             steps {
-                checkout scm
+                deleteDir()
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                 checkout scm
             }
         }
 
         stage('Terraform Init') {
             steps {
-                dir('eks-terraform') {
-                    sh 'terraform init'
-                }
+                sh '''
+                    terraform --version
+                    terraform init -upgrade
+                '''
+            }
+        }
+
+        stage('Terraform Validate') {
+            steps {
+                sh 'terraform validate'
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                dir('eks-terraform') {
-                   
-                        sh 'terraform plan'
-                   
-                }
+                sh 'terraform plan -out=tfplan'
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                dir('eks-terraform') {
-                    
-                        sh 'terraform apply -auto-approve'
-                    
-                }
+                sh 'terraform apply -auto-approve tfplan'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'EKS Infrastructure Deployed Successfully!'
+        }
+        failure {
+            echo 'Pipeline Failed!'
         }
     }
 }
