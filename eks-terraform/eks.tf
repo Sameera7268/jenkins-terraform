@@ -4,7 +4,7 @@ module "eks" {
  name = local.name  
   subnet_ids = module.vpc.private_subnets
   enable_irsa = true
-cluster_version = "1.29"
+ 
 
 
   vpc_id = module.vpc.vpc_id
@@ -13,6 +13,7 @@ cluster_version = "1.29"
  eks_managed_node_groups = {
 
     node_group = {
+      instance_types =["t3.small"]  
       min_size     = 2
       max_size     = 6
       desired_size = 2
