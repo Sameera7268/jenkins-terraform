@@ -24,7 +24,7 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 dir('eks-terraform') {
-                    sh 'terraform init'
+                    sh 'terraform init -upgrade'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 sdir('eks-terraform') {
-                    sh 'terraform init'
+                    sh 'terraform Plan'
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 dir('eks-terraform') {
-                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
                 }
             }
         }
