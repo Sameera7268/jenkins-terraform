@@ -21,9 +21,13 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                dir('eks-terraform') {
-                    sh 'terraform init -upgrade'
-                }
+                 dir('eks-terraform') {
+            sh '''
+                rm -rf .terraform
+                rm -f .terraform.lock.hcl
+                terraform init -upgrade
+            '''
+        }
             }
         }
 
