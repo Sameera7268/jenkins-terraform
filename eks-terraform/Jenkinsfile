@@ -1,7 +1,9 @@
 pipeline {
     agent any
 
-   
+    environment {
+        AWS_DEFAULT_REGION = "ap-south-1"
+    }
 
     stages {
 
@@ -17,16 +19,9 @@ pipeline {
             }
         }
 
+      
+
         stage('Terraform Init') {
-            steps {
-
-               dir('eks-terraform') {
-                    sh 'terraform init'
-                }
-            }
-        }
-
-        stage('Terraform Validate') {
             steps {
                 dir('eks-terraform') {
                     sh 'terraform init'
