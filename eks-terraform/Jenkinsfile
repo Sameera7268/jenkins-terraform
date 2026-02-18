@@ -32,7 +32,7 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir('eks-terraform') {
-                    sh 'terraform Plan'
+                    sh 'terraform plan'
                 }
             }
         }
