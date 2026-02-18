@@ -11,25 +11,29 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                dir('tERRAFORM') {
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
-            }
-        }
-
-        stage('Approval') {
-            steps {
-                input message: 'Approve Terraform Apply?'
+                dir('tERRAFORM') {
+                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'TFVARS_FILE')]) {
+                        sh 'terraform plan -var-file=$TFVARS_FILE'
+                    }
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                dir('tERRAFORM') {
+                    withCredentials([file(credentialsId: 'terraform-dev-tfvars', variable: 'TFVARS_FILE')]) {
+                        sh 'terraform apply -auto-approve -var-file=$TFVARS_FILE'
+                    }
+                }
             }
         }
     }
